@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'game_screen.dart';
+import 'ranking_screen.dart'; // <-- Importa a tela de ranking
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -26,6 +27,13 @@ class _HomeScreenState extends State<HomeScreen> {
           difficulty: _selectedDifficulty,
         ),
       ),
+    );
+  }
+
+  void _viewRanking() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const RankingScreen()),
     );
   }
 
@@ -59,6 +67,12 @@ class _HomeScreenState extends State<HomeScreen> {
             ElevatedButton(
               onPressed: _startGame,
               child: const Text('Iniciar Jogo'),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: _viewRanking,
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              child: const Text('Ver Ranking'),
             ),
           ],
         ),
