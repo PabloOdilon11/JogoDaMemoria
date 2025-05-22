@@ -251,7 +251,6 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildCard(CardModel card, int index) {
-    final faceUp = card.isFaceUp || card.isMatched;
 
     final offsetX = (random.nextDouble() * 10 - 5) * shuffleAnimation.value;
     final offsetY = (random.nextDouble() * 10 - 5) * shuffleAnimation.value;
@@ -292,11 +291,12 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.deepPurpleAccent.withOpacity(0.7),
+                        color: Colors.deepPurpleAccent.withAlpha((0.7 * 255).round()),
                         blurRadius: 8,
                         spreadRadius: 1,
                         offset: const Offset(0, 0),
                       ),
+
                     ],
                   ),
                   child: Center(
