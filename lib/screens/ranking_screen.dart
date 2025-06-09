@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../models/ranking_manager.dart';
-import '../ranking_manager.dart';
 
 class RankingScreen extends StatefulWidget {
   const RankingScreen({super.key});

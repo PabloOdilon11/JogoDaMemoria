@@ -7,14 +7,18 @@ class ShuffleFlipGame extends StatefulWidget {
 }
 
 class _ShuffleFlipGameState extends State<ShuffleFlipGame> with SingleTickerProviderStateMixin {
-  final int numCards = 12;
-  late List<Offset> positions;        // posições normais (grid)
-  late List<Offset> shuffledPositions; // posições embaralhadas
+  final int numCards = 18; // múltiplo de 6 para 6 colunas
+  late List<Offset> positions;
+  late List<Offset> shuffledPositions;
   bool isShuffled = true;
 
   late AnimationController controller;
 
   List<bool> cardFaceUp = [];
+
+  final double cardWidth = 60;
+  final double cardHeight = 80;
+  final double spacing = 10;
 
   @override
   void initState() {
@@ -27,20 +31,21 @@ class _ShuffleFlipGameState extends State<ShuffleFlipGame> with SingleTickerProv
       duration: const Duration(seconds: 1),
     );
 
-    // posições em grid (3 x 4)
+    // Grid: 6 colunas
     positions = List.generate(numCards, (index) {
-      int row = index ~/ 4;
-      int col = index % 4;
-      return Offset(col * 90.0, row * 120.0);
+      int row = index ~/ 6;
+      int col = index % 6;
+      return Offset(
+        col * (cardWidth + spacing),
+        row * (cardHeight + spacing),
+      );
     });
 
-    // posições embaralhadas (aleatórias)
     shuffledPositions = List.generate(numCards, (index) {
       final random = Random();
       return Offset(random.nextDouble() * 300, random.nextDouble() * 400);
     });
 
-    // inicia a animação para desfazer embaralhamento após 2s
     Future.delayed(const Duration(seconds: 2), () {
       setState(() {
         isShuffled = false;
@@ -57,11 +62,28 @@ class _ShuffleFlipGameState extends State<ShuffleFlipGame> with SingleTickerProv
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Shuffle & Flip Cards')),
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.deepPurple.shade900,
+        title: const Text('Shuffle & Flip Game'),
+        centerTitle: true,
+      ),
       body: Center(
-        child: SizedBox(
-          width: 400,
-          height: 500,
+        child: Container(
+          width: (cardWidth + spacing) * 6 - spacing + 32, // 6 colunas + padding
+          height: (cardHeight + spacing) * ((numCards / 6).ceil()) - spacing + 32,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade900,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.5),
+                blurRadius: 12,
+                spreadRadius: 2,
+              ),
+            ],
+          ),
           child: Stack(
             children: List.generate(numCards, (index) {
               return AnimatedPositioned(
@@ -70,7 +92,11 @@ class _ShuffleFlipGameState extends State<ShuffleFlipGame> with SingleTickerProv
                 top: isShuffled ? shuffledPositions[index].dy : positions[index].dy,
                 child: GestureDetector(
                   onTap: () => flipCard(index),
-                  child: FlipCardWidget(isFaceUp: cardFaceUp[index]),
+                  child: FlipCardWidget(
+                    isFaceUp: cardFaceUp[index],
+                    width: cardWidth,
+                    height: cardHeight,
+                  ),
                 ),
               );
             }),
@@ -83,7 +109,15 @@ class _ShuffleFlipGameState extends State<ShuffleFlipGame> with SingleTickerProv
 
 class FlipCardWidget extends StatefulWidget {
   final bool isFaceUp;
-  const FlipCardWidget({Key? key, required this.isFaceUp}) : super(key: key);
+  final double width;
+  final double height;
+
+  const FlipCardWidget({
+    Key? key,
+    required this.isFaceUp,
+    required this.width,
+    required this.height,
+  }) : super(key: key);
 
   @override
   _FlipCardWidgetState createState() => _FlipCardWidgetState();
@@ -139,25 +173,27 @@ class _FlipCardWidgetState extends State<FlipCardWidget> with SingleTickerProvid
           alignment: Alignment.center,
           child: isFront
               ? Container(
-            width: 80,
-            height: 100,
+            width: widget.width,
+            height: widget.height,
             decoration: BoxDecoration(
               color: Colors.grey.shade400,
               borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.white, width: 2),
             ),
-            child: const Center(child: Text('❓', style: TextStyle(fontSize: 32))),
+            child: const Center(child: Text('❓', style: TextStyle(fontSize: 24))),
           )
               : Transform(
             alignment: Alignment.center,
             transform: Matrix4.rotationY(pi),
             child: Container(
-              width: 80,
-              height: 100,
+              width: widget.width,
+              height: widget.height,
               decoration: BoxDecoration(
                 color: Colors.blueAccent,
                 borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.amberAccent, width: 2),
               ),
-              child: const Center(child: Text('🦋', style: TextStyle(fontSize: 32))),
+              child: const Center(child: Text('🦋', style: TextStyle(fontSize: 24))),
             ),
           ),
         );

@@ -1,32 +1,45 @@
 import '../models/card_model.dart';
+import 'dart:math';
 
 class BoardGenerator {
   static List<CardModel> generateBoard(String difficulty) {
-    int pairCount;
+    final List<int> uniqueIds = [];
+    final random = Random();
+
+    int groupSize;
+    int totalCards;
 
     switch (difficulty.toLowerCase()) {
-      case 'fácil':
-        pairCount = 3;
-        break;
       case 'médio':
-        pairCount = 4;
+        groupSize = 3;
+        totalCards = 24;
         break;
       case 'difícil':
-        pairCount = 5;
+        groupSize = 4;
+        totalCards = 24;
         break;
+      case 'fácil':
       default:
-        pairCount = 3; // fallback
+        groupSize = 2;
+        totalCards = 24;
+        break;
     }
 
-    final List<CardModel> cards = [];
+    final numGroups = totalCards ~/ groupSize;
 
-    for (int i = 0; i < pairCount; i++) {
-      // Usa i como ID único para o par
-      cards.add(CardModel(id: i, isFaceUp: false, isMatched: false));
-      cards.add(CardModel(id: i, isFaceUp: false, isMatched: false));
+    while (uniqueIds.length < numGroups) {
+      int id = random.nextInt(1000);
+      if (!uniqueIds.contains(id)) {
+        uniqueIds.add(id);
+      }
     }
 
-    cards.shuffle();
-    return cards;
+    List<CardModel> board = [];
+    for (int id in uniqueIds) {
+      board.addAll(List.generate(groupSize, (_) => CardModel(id: id)));
+    }
+
+    board.shuffle();
+    return board;
   }
 }
