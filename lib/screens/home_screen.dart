@@ -158,25 +158,25 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _viewRanking,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.amberAccent.shade400,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                shadowColor: Colors.amberAccent.shade400,
-                elevation: 8,
-              ),
-              child: Text(
-                'RANKING',
-                style: GoogleFonts.pressStart2p(
-                  color: Colors.black87,
-                  fontSize: 12,
-                ),
-              ),
+        ElevatedButton(
+          onPressed: _viewRanking,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.greenAccent.shade700,
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
             ),
+            shadowColor: Colors.amberAccent.shade400,
+            elevation: 8,
+          ),
+          child: Text(
+            'VER RANKING',
+            style: GoogleFonts.pressStart2p(
+              color: Colors.black87,
+              fontSize: 12,
+            ),
+          ),
+        ),
           ],
         ),
       ),

@@ -30,7 +30,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   int score = 0;
   Timer? _timer;
   int _secondsElapsed = 0;
-  bool surpriseUsed = false; // ADICIONADO
+  bool surpriseUsed = false;
 
   late List<AnimationController> flipControllers;
   late List<Animation<double>> flipAnimations;
