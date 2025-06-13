@@ -203,9 +203,22 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
       _board[i].isFaceUp = false;
       await _flipControllers[i].reverse();
     }
-    if (widget.mode != 'vs IA') {
-      setState(() => _playerScore += _getErrorPenalty());
-    }
+
+    // **** CORREÇÃO APLICADA AQUI ****
+    setState(() {
+      if (widget.mode == 'vs IA') {
+        // Aplica a penalidade ao jogador atual no modo vs IA
+        if (_currentPlayer == Player.human) {
+          _playerScore += _getErrorPenalty();
+        } else {
+          _aiScore += _getErrorPenalty();
+        }
+      } else {
+        // Aplica a penalidade no modo Solo
+        _playerScore += _getErrorPenalty();
+      }
+    });
+
     _showSnackBar('❌ Errou!', Colors.redAccent.shade400);
   }
 
@@ -420,7 +433,6 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     );
   }
 
-  // **** LÓGICA RESTAURADA ****
   Future<void> _finishGame() async {
     final entry = RankingEntry(
       name: widget.playerName,
@@ -518,7 +530,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
 
   String _getEmojiForId(int id) {
     const emojis = [
-      '🍎', '�', '🎲', '🚗', '🦋', '🌟', '🍕', '🎈', '⚽', '🚀',
+      '🍎', '🐶', '🎲', '🚗', '🦋', '🌟', '🍕', '🎈', '⚽', '🚀',
       '🎵', '🐱', '💡', '🎮', '🍔', '🐻', '🎁', '🚌', '🍩', '🎤',
       '📚', '🍇', '🎯', '🛸',
     ];
@@ -541,7 +553,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
       case 1:
         await _startShuffle();
         if(widget.mode == 'vs IA') {
-          _aiPlayer.forgetCards(_board.map((c) => c.id).toList()); // Limpa a memória da IA
+          _aiPlayer.forgetCards(_board.map((c) => c.id).toList());
         }
         _showSnackBar('🔀 Tabuleiro embaralhado!', Colors.blueAccent.shade400);
         break;
